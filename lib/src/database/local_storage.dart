@@ -3,6 +3,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 
 class LocalStorage {
+  final String databaseName;
   final int version;
   final OnDatabaseCreateFn? onCreate;
   final OnDatabaseVersionChangeFn? onUpgrade;
@@ -11,6 +12,7 @@ class LocalStorage {
 
   LocalStorage._(
       {required this.version,
+      required this.databaseName,
       this.onCreate,
       this.onUpgrade,
       this.onDowngrade,
@@ -24,18 +26,26 @@ class LocalStorage {
   }
 
   factory LocalStorage(
-    int version, {
+    int version,
+    String databaseName, {
     OnDatabaseCreateFn? onCreate,
     OnDatabaseVersionChangeFn? onUpgrade,
     OnDatabaseVersionChangeFn? onDowngrade,
     OnDatabaseOpenFn? onOpen,
   }) {
-    return _instance ??= LocalStorage._(version: version);
+    return _instance ??= LocalStorage._(
+        version: version,
+        databaseName: databaseName,
+        onCreate: onCreate,
+        onUpgrade: onUpgrade,
+        onDowngrade: onDowngrade,
+        onOpen: onOpen);
   }
 
   Future<Database> _initDB() async {
     final dir = await _getDatabaseDir();
-    final path = dir.path;
+    final String path = '${dir.path}/$databaseName.db';
+
     return openDatabase(path,
         version: version,
         onCreate: onCreate,
