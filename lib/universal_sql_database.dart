@@ -1,7 +1,5 @@
 library universal_sql_database;
 
-/// A Calculator.
-class Calculator {
-  /// Returns [value] plus 1.
-  int addOne(int value) => value + 1;
-}
+export 'src/database/local_storage.dart';
+export 'src/local_provider/local_provider_base.dart';
+export 'src/models/entity/entity.dart';
